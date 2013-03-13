@@ -2,12 +2,12 @@
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  (at your option) any later version.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.}
 {*-------------------------------------------------------------------------*}
@@ -66,27 +66,25 @@ procedure boardinit;
 {*-------------------------------------------------------------------------*}
 procedure convertmove (basebegin, baseend: string);
  begin
-  for i:=1 to 2 do begin
-   case ord(upcase(bmove[i])) of
-    65: bmove[i]:='1';
-    66: bmove[i]:='2';
-    67: bmove[i]:='3';
-    68: bmove[i]:='4';
-    69: bmove[i]:='5';
-    70: bmove[i]:='6';
-    71: bmove[i]:='7';
-    72: bmove[i]:='8';
-   end;
-   case ord(upcase(emove[i])) of
-    65: emove[i]:='1';
-    66: emove[i]:='2';
-    67: emove[i]:='3';
-    68: emove[i]:='4';
-    69: emove[i]:='5';
-    70: emove[i]:='6';
-    71: emove[i]:='7';
-    72: emove[i]:='8';
-   end;
+  case ord(upcase(bmove[1])) of
+   65: bmove[i]:='1';
+   66: bmove[i]:='2';
+   67: bmove[i]:='3';
+   68: bmove[i]:='4';
+   69: bmove[i]:='5';
+   70: bmove[i]:='6';
+   71: bmove[i]:='7';
+   72: bmove[i]:='8';
+  end;
+  case ord(upcase(emove[2])) of
+   65: emove[i]:='1';
+   66: emove[i]:='2';
+   67: emove[i]:='3';
+   68: emove[i]:='4';
+   69: emove[i]:='5';
+   70: emove[i]:='6';
+   71: emove[i]:='7';
+   72: emove[i]:='8';
   end;
  end;
 {*-------------------------------------------------------------------------*}
@@ -95,13 +93,30 @@ procedure checklose;
   for i:=1 to 8 do begin
    for i2:=1 to 8 do begin
     if (chessboard[i][i2]='DV') or (chessboard[i][i2]='TV') then
-     lose:=false
-    else
-     lose:=true;
+     lose:=false;
+    end;
    end;
   end;
- end;
 {*-------------------------------------------------------------------------*}
+procedure validcheckredirection;
+ var bmn1, bmn2, emn1, emn2, chk: longint;
+ begin
+  val(bmove[1], bmn1, chk);
+  val(bmove[2], bmn2, chk);
+  val(emove[1], emn1, chk);
+  val(emove[2], emn2, chk);
+  case length(chessboard[bmn2][bmn1]) of
+   1: mousevalidcheck;
+   2: case upcase((chessboard[bmn2][bmn1])[2]) of
+       'X': xevalidcheck;
+       'M': mavalidcheck;
+       'T': tuongvalidcheck;
+       'H': hauvalidcheck;
+       'V': vuavalidcheck;
+      end;
+  end;
+ end;
+{*--------------------------------------------------------------------------*}
 begin
  clrscr;
  boardinit;
@@ -122,6 +137,8 @@ begin
   writeln('To where?: ');
   readln(emove);
   convertmove(bmove, emove);
-  readln;
+  validcheckredirection;
+  lose:=true;
+  checklose;
  end;
 end.
