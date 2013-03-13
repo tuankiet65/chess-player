@@ -1,0 +1,7 @@
+==Chess player in command line==
+Chess player in Pascal. Only in CLI because GUI is too hard for a student for me :) This is only my hobby.
+==File==
+*'''chess-player.pas''': Source code
+*'''chess-player''': binary file. Compiled using FPC 2.6.2 on Ubuntu 12.10 65-bit
+*'''LICENSE''': License file
+*'''README.mediawiki''': This file	
