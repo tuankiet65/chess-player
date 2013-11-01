@@ -16,7 +16,6 @@ uses crt;
 var chessboard: array [1..8, 1..8] of string;
     i, i2: longint;
     bmove, emove: string[2];
-    lose: boolean;
 {*-------------------------------------------------------------------------*}
 procedure printboard;
  begin
@@ -88,35 +87,17 @@ procedure convertmove (basebegin, baseend: string);
   end;
  end;
 {*-------------------------------------------------------------------------*}
-procedure checklose;
+function checklose: boolean;
  begin
-  for i:=1 to 8 do begin
-   for i2:=1 to 8 do begin
-    if (chessboard[i][i2]='DV') or (chessboard[i][i2]='TV') then
-     lose:=false;
+  checklose:=true;
+  for i:=1 to 8 do
+   for i2:=1 to 8 do
+    if (chessboard[i][i2]='DV') or (chessboard[i][i2]='TV') then begin
+     checklose:=false;
+     exit;
     end;
-   end;
-  end;
-{*-------------------------------------------------------------------------*}
-procedure validcheckredirection;
- var bmn1, bmn2, emn1, emn2, chk: longint;
- begin
-  val(bmove[1], bmn1, chk);
-  val(bmove[2], bmn2, chk);
-  val(emove[1], emn1, chk);
-  val(emove[2], emn2, chk);
-  case length(chessboard[bmn2][bmn1]) of
-   1: mousevalidcheck;
-   2: case upcase((chessboard[bmn2][bmn1])[2]) of
-       'X': xevalidcheck;
-       'M': mavalidcheck;
-       'T': tuongvalidcheck;
-       'H': hauvalidcheck;
-       'V': vuavalidcheck;
-      end;
-  end;
  end;
-{*--------------------------------------------------------------------------*}
+{*-------------------------------------------------------------------------*}
 begin
  clrscr;
  boardinit;
@@ -127,18 +108,21 @@ begin
  writeln('Press enter to print the chess board');
  readln;
  clrscr;
+ window(1,1,46,23);
  printboard;
  writeln;
  writeln;
- while lose<>true do begin
-  checklose;
-  writeln('Choose your move: ');
-  readln(bmove);
-  writeln('To where?: ');
-  readln(emove);
-  convertmove(bmove, emove);
-  validcheckredirection;
-  lose:=true;
-  checklose;
- end;
+ repeat
+  repeat
+   window(47,1,80,25);
+   writeln('Choose your move (example: a6): ');
+   readln(bmove);
+   writeln('To where? (example: : ');
+   readln(emove);
+  until {valid(bmove, emove)=true}true;
+  {move(bmove, emove);}
+  clrscr;
+  window(1,1,46,23);
+  printboard;
+ until checklose=true;
 end.
